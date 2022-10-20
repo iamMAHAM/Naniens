@@ -22,6 +22,10 @@ const infoSchema = new Schema({
     type: Number,
     required: true
   },
+  profilUrl: {
+    type: String,
+    required: true
+  },
   linkedinUrl: {
     type: String,
     required: true
@@ -29,14 +33,14 @@ const infoSchema = new Schema({
   githubUrl: {
     type: String,
     required: false,
-    default: 'https://google.com'
+    default: 'https://github.com'
   },
   portfolioUrl: {
     type: String,
     required: true,
   },
   phoneNumber: {
-    type: Number,
+    type: String,
     required: true
   },
   generation: {
@@ -52,7 +56,7 @@ const infoSchema = new Schema({
   skills: {
     frontEnd: {
       type: Array,
-      required: true,
+      required: false,
       default: ['HTML', 'CSS']
     },
     backEnd: {
