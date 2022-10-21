@@ -1,0 +1,130 @@
+<template>
+  <div class="home">
+    <body>
+      <form class="container">
+        <div class="form" style="color: #fff;">
+          <h2 align="center">INFORMATIONS DU NANIENS</h2>
+          <div class="main-content" align="center" style="margin-top: 10px;">
+            <input type="text" name="fullName" id="" placeholder="nom complet" required v-model="info.fullName">
+            <input type="text" name="email" id="" placeholder="email @" required v-model="info.email">
+            <input type="number" name="age" id="" placeholder="age" required v-model="info.age">
+            <input type="text" name="phoneNumber" id="" placeholder="Numero de téléphone" required v-model="info.phoneNumber">
+            <input type="text" name="generation" id="" placeholder="Génération (ex : 5.22 ou 4.21)" required v-model="info.generation">
+            <select name="speciality" style="cursor: pointer;" required v-model="info.speciality">
+              <option value="" disabled selected="true">Choisir la spécialité</option>
+              <option value="javascript">Javascript</option>´
+              <option value="python">Python</option>
+              <option value="C#">C#</option>
+              <option value="flutter">Flutter</option>
+              <option value="PHP">PHP</option>
+              <option value="front-end">Front-end</option>
+              <option value="multimedia">Multimédia</option>
+            </select>
+            <select name="isBusy" style="cursor: pointer;" required v-model="info.isBusy">
+              <option value="" disabled selected="true">Choisir la disponibilité</option>
+              <option :value="false">libre</option>
+              <option :value="true">travail déjà</option>
+            </select>
+            <select name="gender" style="cursor: pointer;" required v-model="info.gender">
+              <option value="" disabled selected="true">Choisir son genre</option>
+              <option value="M">homme</option>
+              <option value="F">femme</option>
+            </select>
+            <input type="text" name="profilUrl" id="" placeholder="photo de profil " required v-model="info.profilUrl">
+            <input type="text" name="githubUrl" id="" placeholder="lien du profile github" required v-model="info.githubUrl">
+            <input type="text" name="linkedinUrl" id="" placeholder="lien de profile linkedin" required v-model="info.linkedinUrl">
+            <input type="text" name="portfolioUrl" id="" placeholder="lien du portfolio" v-model="info.portfolioUrl">
+          </div>
+
+          <h2 align="center" style="margin-top: 10px;">COMPETENCES DU NANIENS</h2>
+          <div class="main-content" align="center" style="margin-top: 10px;">
+            <h4 align=center>Front-end</h4>
+            <input type="text" name="frontEnd" id="" placeholder="délimité par une virgule (react, vue etc...)">
+            <h4 align=center>Back-end</h4>
+            <input type="text" name="backEnd" id="" placeholder="délimité par une virgule (laravel, django, expressjs etc...)">
+            <h4 align=center>Base de données</h4>
+            <input type="text" name="databases" id="" placeholder="délimité par une virgule (mysql, mongodb, postgresql etc...)">
+            
+          </div>
+        </div>
+        <div style="text-align: center">
+          <Card :info="info || {}"/>
+          <input type="submit" value="soumettre" style="width: 200px; margin: 10px; cursor: pointer;">
+        </div>
+
+      </form>
+  </body>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import Card from "@/components/Card.vue"
+
+export default defineComponent({
+  name: 'Home',
+  components: {
+    Card
+  },
+  data(){
+    return {
+      info: {
+        fullName: 'akoto',
+        speciality: 'Javascript',
+        email: '',
+        gender: 'M',
+        age: 1,
+        profilUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80',
+        linkedinUrl: 'https://linkedin.com',
+        githubUrl: 'https://github.com',
+        portfolioUrl: 'https://me.iamMAHAM.com',
+        phoneNumber: '0101010101',
+        generation: 5.22,
+        isBusy: false,
+        skills: {
+          frontEnd: ['HTML', 'CSS'],
+          backEnd: [],
+          databases: []
+        }
+      }
+    }
+  }
+});
+</script>
+
+<style>
+.container{
+  gap: 15%;
+  min-height: 900px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.form{
+  position: relative;
+  max-width: 800px;
+}
+
+.main-content{
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content *{
+  margin: 10px;
+}
+
+select,
+input{
+  border-radius: 5px;
+  padding: 10px;
+  width: 500px;
+  font-size: 20px;
+}
+
+.resume p{
+  padding: 10px;
+  margin: 20px;
+}
+</style>
