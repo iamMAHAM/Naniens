@@ -37,19 +37,42 @@
           </div>
 
           <h2 align="center" style="margin-top: 10px;">COMPETENCES DU NANIENS</h2>
-          <div class="main-content" align="center" style="margin-top: 10px;">
+          <div class="main-content"  style="margin-top: 10px;">
             <h4 align=center>Front-end</h4>
-            <input type="text" name="frontEnd" id="" placeholder="délimité par une virgule (react, vue etc...)">
+            <input type="text" name="frontEnd" id="" placeholder="délimité par une virgule (react, vue etc...)" @input="skill">
+            <div class="lss">
+              <span v-for="fe in info.skills.frontEnd"
+                >
+                  {{ fe }}
+              </span>
+            </div>
             <h4 align=center>Back-end</h4>
-            <input type="text" name="backEnd" id="" placeholder="délimité par une virgule (laravel, django, expressjs etc...)">
+            <input type="text" name="backEnd" id="" placeholder="délimité par une virgule (laravel, django, expressjs etc...)" @input="skill">
+            <div class="lss">
+              <span v-for="be in info.skills.backEnd"
+                >
+                  {{ be }}
+              </span>
+            </div>
             <h4 align=center>Base de données</h4>
-            <input type="text" name="databases" id="" placeholder="délimité par une virgule (mysql, mongodb, postgresql etc...)">
-            
+            <input type="text" name="databases" id="" placeholder="délimité par une virgule (mysql, mongodb, postgresql etc...)" @input="skill">
+            <div class="lss">
+              <span v-for="db in info.skills.databases"
+                >
+                  {{ db }}
+              </span>
+            </div>
           </div>
         </div>
         <div style="text-align: center">
+          <p align="center">
+            <h4 style="color: var(--white); padding: 10px;">RETROUVER MES DONNEES</h4>
+            <input type="text" name="" id="" style="width: 300px" v-model="email">
+            <input type="submit" value="retrouver" style="width: 100px; margin-left: 5px;" @click.prevent="retrieve">
+          </p>
+          <div align="center" style="margin: 15px; font-size: 25px; color: var(--white); border:.5px solid var(--white); padding: 15px">APERÇU EN DIRECT</div>
           <Card :info="info || {}"/>
-          <input type="submit" value="soumettre" style="width: 200px; margin: 10px; cursor: pointer;">
+          <input type="submit" value="soumettre" style="width: 200px; margin: 10px; cursor: pointer;" @click.prevent="submit">
         </div>
 
       </form>
@@ -69,25 +92,62 @@ export default defineComponent({
   data(){
     return {
       info: {
-        fullName: 'akoto',
-        speciality: 'Javascript',
+        fullName: 'nom complet',
+        speciality: '',
         email: '',
         gender: 'M',
-        age: 1,
-        profilUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80',
-        linkedinUrl: 'https://linkedin.com',
-        githubUrl: 'https://github.com',
-        portfolioUrl: 'https://me.iamMAHAM.com',
-        phoneNumber: '0101010101',
+        age: '',
+        profilUrl: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2080&q=80',
+        linkedinUrl: '',
+        githubUrl: '',
+        portfolioUrl: '',
+        phoneNumber: '',
         generation: 5.22,
-        isBusy: false,
+        isBusy: '',
         skills: {
-          frontEnd: ['HTML', 'CSS'],
-          backEnd: [],
-          databases: []
+          frontEnd: ['HTML', 'CSS'] as String[],
+          backEnd: [] as String[],
+          databases: [] as String[]
         }
-      }
+      },
+      email: ''
     }
+  },
+  methods:{
+    retrieve(){
+      fetch(`/api/retrieve/${this.email}`)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.message){
+          alert("Aucune information trouvée avec ce mail ...")
+        }else{
+          console.log(data)
+          const retrieved = {...data.message}
+          delete retrieved?.createdAt
+          delete retrieved?.updatedAt
+          delete retrieved?.__v
+          this.info = {...data.message}
+          console.log(this.info)
+          alert("retrouvé avec succèss")
+        }
+      })
+    },
+    submit(){
+      console.log(this.info)
+      fetch('/api/add', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json'},
+        body: JSON.stringify(this.info)
+      })
+      .then(res => res.json())
+      .then(data => alert(JSON.stringify(data)))
+    },
+    skill(e: Event){
+      type keys = keyof typeof this.info.skills
+      const target = e.target as HTMLInputElement
+      const property = target.name as keys
+      this.info.skills[property] = [...target.value.trim().split(',')]
+    },
   }
 });
 </script>
@@ -126,5 +186,16 @@ input{
 .resume p{
   padding: 10px;
   margin: 20px;
+}
+
+.lss{
+  margin: 0;
+}
+
+.lss span{
+  padding: 3px;
+  border-radius: 8px;
+  background-color: var(--white);
+  color: var(--bg);
 }
 </style>

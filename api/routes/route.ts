@@ -4,11 +4,19 @@ const router = Router()
 
 router.post('/add', async (req: Request, res: Response) => {
   try {
-    const data = new Info(req.body)
+    let body = req.body
     const exists = await Info.findOne({
-      email: data.email
+      email: body.email
     })
-    if (exists) throw new Error("informations déjà enregistrée")
+    if (exists) {
+      await Info.updateOne(...body, ...body)
+      res.status(200).json({
+        status: true,
+        message: body,
+      })
+      return
+    }
+    const data = new Info(body)
     await data.save()
     res.status(200).json({
       status: true,
@@ -20,6 +28,14 @@ router.post('/add', async (req: Request, res: Response) => {
       message: e instanceof Error ? e.message : e
     })
   }
+})
+
+router.get('/retrieve/:email', async (req: Request, res: Response)=>{
+  const email = req.params.email
+  const retrieved = await Info.findOne({ email: email})
+  res.status(200).json({
+    message: retrieved?.toObject()
+  })
 })
 
 export default router

@@ -20,7 +20,7 @@
       <div class="user-center">
         <div class="ct">
           <img :src="info.profilUrl">
-          <span class="fullname">{{ info.fullName }}</span>
+          <span class="fullname">{{ info.fullName?.toUpperCase() }}</span>
         </div>
 
         <div class="spec-logo">
@@ -135,7 +135,7 @@ export default defineComponent({
     position: relative;
     height: 110px;
     background-image: url("https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2526&q=80");
-    border-bottom: 1px solid white;
+    /* border-bottom: 1px solid white; */
     background-size: cover;
     background-repeat: no-repeat;
   }
@@ -171,7 +171,7 @@ export default defineComponent({
   }
 
   .user-card .user-bottom{
-    border-top: 1px solid white;
+    /* border-top: 1px solid white; */
     height: 50px;
   }
 
@@ -217,8 +217,10 @@ export default defineComponent({
 
   .user-center img{
     transform: translateY(-40%);
-    height: 100px;
-    width: 100px;
+    min-height: 100px;
+    min-width: 100px;
+    max-height: 100px;
+    max-width: 100px;
     border-radius: 50%;
   }
 
