@@ -9,18 +9,13 @@ router.post('/add', async (req: Request, res: Response) => {
       email: body.email
     })
     if (exists) {
-      await Info.updateOne(...body, ...body)
-      res.status(200).json({
-        status: true,
-        message: body,
-      })
-      return
+      await exists.delete()
     }
     const data = new Info(body)
     await data.save()
     res.status(200).json({
       status: true,
-      message: data.toObject(),
+      message: 'enregistré avec succès',
     })
   } catch (e: unknown){
     res.status(401).json({
