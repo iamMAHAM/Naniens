@@ -1,6 +1,6 @@
 <template lang="">
-  <div>
-    <div class="user-card">
+  <div class="card-container">
+    <div class="user-card front">
       <div class="user-top">
         <div class="tt">
           <span class="tl">
@@ -25,7 +25,7 @@
 
         <div class="spec-logo">
           <span class="spec">Développeur {{ info.speciality }}</span>
-          <i class="fa-brands fa-js"></i>
+          <img :src="getImage(`assets/${info.speciality}.png`)" alt="image de spécialité">
         </div>
       </div>
 
@@ -34,6 +34,35 @@
           <a :href="info.linkedinUrl" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
           <a :href="info.githubUrl" target="_blank"><i class="fa-brands fa-github"></i></a>
           <a :href="info.portfolioUrl" target="_blank"><i class="fa-regular fa-address-card"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="user-card back">
+      <div class="user-top back" style="background:none">
+        <p>GÉNÉRATION :  {{ info.generation }}</p>
+        <p>COMPÉTENCES</p>
+      </div>
+      <div class="skills">
+        <div class="skill">
+          <span>Front-End : </span>
+          <div class="simages">
+            <img src="@/assets/html.png" alt="competence image">
+            <img src="@/assets/vue.png" alt="competence image">
+            <img src="@/assets/react.png" alt="competence image">
+            <img src="@/assets/angular.png" alt="competence image">
+          </div>
+        </div>
+        <div class="skill">
+          <span>Back-End : </span>
+          <div class="simages">
+            <img src="@/assets/node.png" alt="competence image">
+          </div>
+        </div>
+        <div class="skill">
+          <span>Database : </span>
+          <div class="simages">
+            <img src="@/assets/mysql.png" alt="comptence image">
+          </div>
         </div>
       </div>
     </div>
@@ -117,12 +146,19 @@ interface Info{
 export default defineComponent({
   name: 'Card',
   props: ['info'],
-  updated() {
-    console.log(this.info)
+  methods:{
+    getImage(path: string){
+      return require(`@/${path.toLowerCase()}`)
+    }
   }
 })
 </script>
 <style>
+
+  .card-container{
+    display: flex;
+    gap: 20px;
+  }
   .user-card{
     overflow: hidden;
     width: 300px;
@@ -215,7 +251,7 @@ export default defineComponent({
     position: relative;
   }
 
-  .user-center img{
+  .user-center .ct img{
     transform: translateY(-40%);
     min-height: 100px;
     min-width: 100px;
@@ -247,9 +283,50 @@ export default defineComponent({
     align-items: center;
   }
 
-  .spec-logo i {
-    font-size: 25px;
+  .spec-logo img {
+    height: 25px;
+    width: 25px;
     margin-left: 5px;
     color: var(--js);
   }
+
+  .user-card.back{
+    color: var(--white);
+  }
+
+  .user-card.back p{
+    font-size: 20px;
+    padding: 5px;
+    margin: 5px;
+  }
+
+  .skills{
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  .skill{
+    display: flex;
+    align-items: center;
+  }
+
+  .skill span{
+    margin: 0 8px;
+    font-size: 18px;
+  }
+
+  .simages{
+    overflow: hidden;
+    width: 180px;
+    height: 44px;
+  }
+
+  .simages img{
+    width: 40px;
+    height: 40px;
+  }
+
+  
 </style>

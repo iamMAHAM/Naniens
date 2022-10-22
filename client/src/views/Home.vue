@@ -19,7 +19,7 @@
               <option :value="5.22">5.22</option>
             </select>
             <select name="speciality" style="cursor: pointer;" required v-model="info.speciality">
-              <option value="" disabled selected="true">Choisir la spécialité</option>
+              <option value="no" disabled selected="true">Choisir la spécialité</option>
               <option value="javascript">Javascript</option>´
               <option value="python">Python</option>
               <option value="C#">C#</option>
@@ -79,8 +79,9 @@
             <input type="email" name="" id="" style="width: 300px" v-model="email" placeholder="addresse email">
             <input type="submit" value="retrouver" style="width: 100px; margin-left: 5px;" @click.prevent="retrieve">
           </p>
-          <div align="center" style="margin: 15px; font-size: 25px; color: var(--white); border:.5px solid var(--white); padding: 15px">APERÇU EN DIRECT</div>
-          <Card :info="info || {}"/>
+          <div>
+            <Card :info="info || {}"/>
+          </div>
         </div>
 
       </form>
@@ -101,7 +102,7 @@ export default defineComponent({
     return {
       info: {
         fullName: 'nom complet',
-        speciality: '',
+        speciality: 'no',
         email: '',
         gender: 'M',
         age: '',
