@@ -2,14 +2,22 @@
   <div class="home">
     <body>
       <form class="container">
-        <div class="form" style="color: #fff;">
-          <h2 align="center">INFORMATIONS DU NANIENS</h2>
+        <div class="form" style="color: #fff; margin-top: 30px;">
+          <h2 align="center">INFORMATIONS DU NANIEN</h2>
           <div class="main-content" align="center" style="margin-top: 10px;">
             <input type="text" name="fullName" id="" placeholder="nom complet" required v-model="info.fullName">
             <input type="text" name="email" id="" placeholder="email @" required v-model="info.email">
             <input type="number" name="age" id="" placeholder="age" required v-model="info.age">
             <input type="text" name="phoneNumber" id="" placeholder="Numero de téléphone" required v-model="info.phoneNumber">
-            <input type="text" name="generation" id="" placeholder="Génération (ex : 5.22 ou 4.21)" required v-model="info.generation">
+            <!-- <input type="text" name="generation" id="" placeholder="Génération (ex : 5.22 ou 4.21)" required v-model="info.generation"> -->
+            <select name="generation" style="cursor: pointer;" required v-model="info.generation">
+              <option value="" disabled selected="true">Choisir la promotion</option>
+              <option :value="1.18">1.18</option>
+              <option :value="2.19">2.19</option>
+              <option :value="3.20">3.20</option>
+              <option :value="4.21">4.21</option>
+              <option :value="5.22">5.22</option>
+            </select>
             <select name="speciality" style="cursor: pointer;" required v-model="info.speciality">
               <option value="" disabled selected="true">Choisir la spécialité</option>
               <option value="javascript">Javascript</option>´
@@ -37,7 +45,7 @@
           </div>
 
           <h2 align="center" style="margin-top: 10px;">COMPETENCES DU NANIENS</h2>
-          <div class="main-content"  style="margin-top: 10px;">
+          <div class="main-content s"  style="margin-top: 10px;">
             <h4 align=center>Front-end</h4>
             <input type="text" name="frontEnd" id="" placeholder="délimité par une virgule (react, vue etc...)" @input="skill">
             <div class="lss">
@@ -62,17 +70,17 @@
                   {{ db }}
               </span>
             </div>
+            <input type="submit" value="soumettre" @click.prevent="submit">
           </div>
         </div>
         <div style="text-align: center">
           <p align="center">
             <h4 style="color: var(--white); padding: 10px;">RETROUVER MES DONNEES</h4>
-            <input type="text" name="" id="" style="width: 300px" v-model="email">
+            <input type="email" name="" id="" style="width: 300px" v-model="email" placeholder="addresse email">
             <input type="submit" value="retrouver" style="width: 100px; margin-left: 5px;" @click.prevent="retrieve">
           </p>
           <div align="center" style="margin: 15px; font-size: 25px; color: var(--white); border:.5px solid var(--white); padding: 15px">APERÇU EN DIRECT</div>
           <Card :info="info || {}"/>
-          <input type="submit" value="soumettre" style="width: 200px; margin: 10px; cursor: pointer;" @click.prevent="submit">
         </div>
 
       </form>
@@ -102,14 +110,15 @@ export default defineComponent({
         githubUrl: '',
         portfolioUrl: '',
         phoneNumber: '',
-        generation: 5.22,
+        generation: '',
         isBusy: '',
         skills: {
-          frontEnd: ['HTML', 'CSS'] as String[],
+          frontEnd: [] as String[],
           backEnd: [] as String[],
           databases: [] as String[]
         }
       },
+      inter:{},
       email: ''
     }
   },
@@ -121,19 +130,26 @@ export default defineComponent({
         if (!data.message){
           alert("Aucune information trouvée avec ce mail ...")
         }else{
-          console.log(data)
           const retrieved = {...data.message}
           delete retrieved?.createdAt
           delete retrieved?.updatedAt
           delete retrieved?.__v
           this.info = {...data.message}
-          console.log(this.info)
+          this.inter = {...this.info}
+          // console.log(this.info)
           alert("retrouvé avec succèss")
         }
       })
     },
     submit(){
-      console.log(this.info)
+      const message = `
+        cette action écrasera vos données si elle existe.
+        si vous voulez effectuer une modification merci de
+        retrouver vos informations avant.
+        voulez vous continuer ?
+      `   
+      // console.log(this.info)
+      if (window.confirm(message))
       fetch('/api/add', {
         method: 'POST',
         headers: { 'content-type': 'application/json'},
@@ -146,8 +162,20 @@ export default defineComponent({
       type keys = keyof typeof this.info.skills
       const target = e.target as HTMLInputElement
       const property = target.name as keys
-      this.info.skills[property] = [...target.value.trim().split(',')]
+      this.info.skills[property] = [...target.value.trim().split(',').filter(n => n)]
     },
+  },
+  watch:{
+    inter(){
+      const allinp = document.querySelectorAll(".main-content.s input[type='text']")
+      Array.from(allinp).map(input => {
+        if (input instanceof HTMLInputElement){
+          type names = keyof typeof this.info.skills
+          const name = input.name as names
+          input.value = this.info.skills[name].join(',')
+        }
+      })
+    }
   }
 });
 </script>
@@ -168,7 +196,9 @@ export default defineComponent({
 
 .main-content{
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  width: 850px;
+  flex-direction: row;
 }
 
 .main-content *{
@@ -179,7 +209,7 @@ select,
 input{
   border-radius: 5px;
   padding: 10px;
-  width: 500px;
+  width: 400px;
   font-size: 20px;
 }
 
@@ -197,5 +227,25 @@ input{
   border-radius: 8px;
   background-color: var(--white);
   color: var(--bg);
+}
+
+.main-content.s{
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+input[type="submit"]{
+  border-radius: 8px;
+  margin: 10px;
+  background-color: var(--white);
+  color: var(--bg);
+  cursor: pointer;
+  width: 150px;
+}
+
+input[type="submit"]:hover{
+  background-color: rgb(169, 165, 165);
+  color: var(--white);
 }
 </style>
