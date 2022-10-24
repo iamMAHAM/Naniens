@@ -25,7 +25,7 @@
 
         <div class="spec-logo">
           <span class="spec">Développeur {{ info.speciality }}</span>
-          <img :src="getImage(`assets/${info.speciality}.png`)" alt="image de spécialité">
+          <img :src="getImage(`${info.speciality}`)" alt="image de spécialité">
         </div>
       </div>
 
@@ -46,22 +46,31 @@
         <div class="skill">
           <span>Front-End : </span>
           <div class="simages">
-            <img src="@/assets/html.png" alt="competence image">
-            <img src="@/assets/vue.png" alt="competence image">
-            <img src="@/assets/react.png" alt="competence image">
-            <img src="@/assets/angular.png" alt="competence image">
+            <img
+              v-for="img in info.skills.frontEnd"
+              :src="getImage(img)"
+              :alt="`maitrise de ${img}`"
+            >
           </div>
         </div>
         <div class="skill">
           <span>Back-End : </span>
           <div class="simages">
-            <img src="@/assets/node.png" alt="competence image">
+            <img
+              v-for="img in info.skills.backEnd"
+              :src="getImage(img)"
+              :alt="`maitrise de ${img}`"
+            >
           </div>
         </div>
         <div class="skill">
           <span>Database : </span>
           <div class="simages">
-            <img src="@/assets/mysql.png" alt="comptence image">
+            <img
+              v-for="img in info.skills.databases"
+              :src="getImage(img)"
+              :alt="`maitrise de ${img}`"
+            >
           </div>
         </div>
       </div>
@@ -147,8 +156,15 @@ export default defineComponent({
   name: 'Card',
   props: ['info'],
   methods:{
-    getImage(path: string){
-      return require(`@/${path.toLowerCase()}`)
+    getImage(name: string){
+      try{
+        return require(`@/assets/${name.toLowerCase()}.png`)
+      } catch (e: unknown){
+        if (e instanceof Error){
+          alert(`aucune image trouvé avec le nom : ${name}`)
+          return require('@/assets/no.png')
+        }
+      }
     }
   }
 })

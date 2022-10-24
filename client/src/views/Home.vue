@@ -47,7 +47,7 @@
           <h2 align="center" style="margin-top: 10px;">COMPETENCES DU NANIENS</h2>
           <div class="main-content s"  style="margin-top: 10px;">
             <h4 align=center>Front-end</h4>
-            <input type="text" name="frontEnd" id="" placeholder="délimité par une virgule (react, vue etc...)" @input="skill">
+            <input type="text" name="frontEnd" id="" placeholder="délimité par une virgule (react, vue etc...)" @keydown="skill">
             <div class="lss">
               <span v-for="fe in info.skills.frontEnd"
                 >
@@ -55,7 +55,7 @@
               </span>
             </div>
             <h4 align=center>Back-end</h4>
-            <input type="text" name="backEnd" id="" placeholder="délimité par une virgule (laravel, django, expressjs etc...)" @input="skill">
+            <input type="text" name="backEnd" id="" placeholder="délimité par une virgule (laravel, django, expressjs etc...)" @keydown="skill">
             <div class="lss">
               <span v-for="be in info.skills.backEnd"
                 >
@@ -63,7 +63,7 @@
               </span>
             </div>
             <h4 align=center>Base de données</h4>
-            <input type="text" name="databases" id="" placeholder="délimité par une virgule (mysql, mongodb, postgresql etc...)" @input="skill">
+            <input type="text" name="databases" id="" placeholder="délimité par une virgule (mysql, mongodb, postgresql etc...)" @keydown="skill">
             <div class="lss">
               <span v-for="db in info.skills.databases"
                 >
@@ -80,7 +80,7 @@
             <input type="submit" value="retrouver" style="width: 100px; margin-left: 5px;" @click.prevent="retrieve">
           </p>
           <div>
-            <Card :info="info || {}"/>
+            <Card :info="info"/>
           </div>
         </div>
 
@@ -159,11 +159,14 @@ export default defineComponent({
       .then(res => res.json())
       .then(data => alert(JSON.stringify(data)))
     },
-    skill(e: Event){
+    skill(e: KeyboardEvent){
       type keys = keyof typeof this.info.skills
       const target = e.target as HTMLInputElement
       const property = target.name as keys
-      this.info.skills[property] = [...target.value.trim().split(',').filter(n => n)]
+      if (e.key === ','){
+        console.log("bingo")
+        this.info.skills[property] =  [...target.value.trim().split(',').filter(n => n)]
+      }
     },
   },
   watch:{
