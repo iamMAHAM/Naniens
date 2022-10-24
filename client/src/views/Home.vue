@@ -47,7 +47,7 @@
           <h2 align="center" style="margin-top: 10px;">COMPETENCES DU NANIENS</h2>
           <div class="main-content s"  style="margin-top: 10px;">
             <h4 align=center>Front-end</h4>
-            <input type="text" name="frontEnd" id="" placeholder="délimité par une virgule (react, vue etc...)" @keydown="skill">
+            <input type="text" name="frontEnd" id="" placeholder="délimité par une virgule (react, vue etc...)" @keydown="skill" @change="end">
             <div class="lss">
               <span v-for="fe in info.skills.frontEnd"
                 >
@@ -55,7 +55,7 @@
               </span>
             </div>
             <h4 align=center>Back-end</h4>
-            <input type="text" name="backEnd" id="" placeholder="délimité par une virgule (laravel, django, expressjs etc...)" @keydown="skill">
+            <input type="text" name="backEnd" id="" placeholder="délimité par une virgule (laravel, django, expressjs etc...)" @keydown="skill" @change="end">
             <div class="lss">
               <span v-for="be in info.skills.backEnd"
                 >
@@ -63,7 +63,7 @@
               </span>
             </div>
             <h4 align=center>Base de données</h4>
-            <input type="text" name="databases" id="" placeholder="délimité par une virgule (mysql, mongodb, postgresql etc...)" @keydown="skill">
+            <input type="text" name="databases" id="" placeholder="délimité par une virgule (mysql, mongodb, postgresql etc...)" @keydown="skill" @change="">
             <div class="lss">
               <span v-for="db in info.skills.databases"
                 >
@@ -137,7 +137,6 @@ export default defineComponent({
           delete retrieved?.__v
           this.info = {...data.message}
           this.inter = {...this.info}
-          // console.log(this.info)
           alert("retrouvé avec succèss")
         }
       })
@@ -148,8 +147,7 @@ export default defineComponent({
         si vous voulez effectuer une modification merci de
         retrouver vos informations avant.
         voulez vous continuer ?
-      `   
-      // console.log(this.info)
+      `
       if (window.confirm(message))
       fetch('/api/add', {
         method: 'POST',
@@ -164,10 +162,15 @@ export default defineComponent({
       const target = e.target as HTMLInputElement
       const property = target.name as keys
       if (e.key === ','){
-        console.log("bingo")
         this.info.skills[property] =  [...target.value.trim().split(',').filter(n => n)]
       }
     },
+    end(e: Event){
+      type keys = keyof typeof this.info.skills
+      const target = e.target as HTMLInputElement
+      const property = target.name as keys
+      this.info.skills[property] =  [...target.value.trim().split(',').filter(n => n)]
+    }
   },
   watch:{
     inter(){
