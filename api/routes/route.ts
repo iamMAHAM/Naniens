@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express"
 import Info from "../models/info.model"
+import specialities from "../models/specialities.model"
 const router = Router()
 
 router.post('/add', async (req: Request, res: Response) => {
@@ -30,6 +31,16 @@ router.get('/retrieve/:email', async (req: Request, res: Response)=>{
   const retrieved = await Info.findOne({ email: email})
   res.status(200).json({
     message: retrieved?.toObject()
+  })
+})
+
+
+router.get('/specialities', async (_: Request, res: Response) => {
+  const specialies  = await specialities.find()
+  console.log(specialies)
+  res.json({
+    status: true,
+    specialities: specialies
   })
 })
 
