@@ -44,4 +44,20 @@ router.get('/specialities', async (_: Request, res: Response) => {
   })
 })
 
+
+router.get('/specialities/:id', async (req: Request, res: Response) => {
+  const data = await specialities.findOne({name: req.params.id})
+  console.log(data)
+  if (data){
+    res.json({
+      status: true,
+      data: data?.toObject()
+    })
+  } else{
+    res.json({
+      status: false,
+      message: 'pas trouvé'
+    })
+  }
+})
 export default router
