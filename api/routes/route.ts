@@ -35,6 +35,15 @@ router.get('/retrieve/:email', async (req: Request, res: Response)=>{
 })
 
 
+router.get('/naniens', async (_: Request, res: Response) => {
+  const naniens = await Info.find()
+  res.json({
+    status: true,
+    data: [...naniens]
+  })
+})
+
+
 router.get('/specialities', async (_: Request, res: Response) => {
   const specialies  = await specialities.find()
   console.log(specialies)
