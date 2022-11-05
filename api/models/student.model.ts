@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-const infoSchema = new Schema({
+const studentShema = new Schema({
   fullName: {
     type:  String,
     required: true
@@ -73,4 +73,4 @@ const infoSchema = new Schema({
   timestamps: true
 })
 
-export default model('Info', infoSchema)
+export default model('Students', studentShema)

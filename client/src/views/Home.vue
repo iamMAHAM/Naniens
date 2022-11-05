@@ -125,6 +125,7 @@ export default defineComponent({
   },
   methods:{
     retrieve(){
+      console.log(this.info)
       fetch(`/api/retrieve/${this.email}`)
       .then(res => res.json())
       .then(data => {
