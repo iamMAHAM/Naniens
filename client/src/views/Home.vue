@@ -126,7 +126,7 @@ export default defineComponent({
   methods:{
     retrieve(){
       console.log(this.info)
-      fetch(`/api/retrieve/${this.email}`)
+      fetch(`http://192.168.88.15:3001/api/retrieve/${this.email}`)
       .then(res => res.json())
       .then(data => {
         if (!data.message){
@@ -150,7 +150,7 @@ export default defineComponent({
         voulez vous continuer ?
       `
       if (window.confirm(message))
-      fetch('/api/add', {
+      fetch('http://192.168.88.15:3001/api/add', {
         method: 'POST',
         headers: { 'content-type': 'application/json'},
         body: JSON.stringify(this.info)
@@ -190,16 +190,16 @@ export default defineComponent({
 
 <style>
 .container{
-  gap: 15%;
+  margin: 0 auto;
+  max-width: 1140px;
   min-height: 900px;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   display: flex;
 }
 
 .form{
   position: relative;
-  max-width: 800px;
 }
 
 .main-content{
@@ -255,5 +255,11 @@ input[type="submit"]{
 input[type="submit"]:hover{
   background-color: rgb(169, 165, 165);
   color: var(--white);
+}
+
+@media screen and (max-width: 1024px){
+  .main-content{
+    width: unset
+  }
 }
 </style>
