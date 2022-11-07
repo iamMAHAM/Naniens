@@ -67,6 +67,11 @@ const studentShema = new Schema({
     databases: {
       type: Array,
       required: false,
+    },
+    likes: {
+      type: Number,
+      required: false,
+      default: 0
     }
   }
 }, {
