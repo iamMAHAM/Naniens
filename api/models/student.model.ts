@@ -12,6 +12,8 @@ const studentShema = new Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
+    match: /.+\@.+\..+/,
   },
   gender: {
     type: String,
@@ -53,6 +55,11 @@ const studentShema = new Schema({
     required: true,
     default: false
   },
+  likers: {
+    type: [String],
+    required: false,
+    default: []
+  },
   skills: {
     frontEnd: {
       type: Array,
@@ -67,11 +74,6 @@ const studentShema = new Schema({
     databases: {
       type: Array,
       required: false,
-    },
-    likes: {
-      type: Number,
-      required: false,
-      default: 0
     }
   }
 }, {

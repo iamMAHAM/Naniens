@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express"
 import Student from "../models/student.model"
 import specialities from "../models/specialities.model"
+import { domains } from "../config/authorized"
 const router = Router()
 
 router.post('/add', async (req: Request, res: Response) => {
@@ -48,7 +49,7 @@ router.get('/naniens', async (_: Request, res: Response) => {
 router.get('/specialities', async (_: Request, res: Response) => {
   const specialies  = await specialities.find()
   console.log(specialies)
-  res.json({
+  res.status(200).json({
     status: true,
     specialities: specialies
   })
@@ -60,7 +61,7 @@ router.get('/specialities/:id', async (req: Request, res: Response) => {
   console.log('fetching data for ', req.params.id, ' speciality')
   if (data){
     console.log(data)
-    res.json({
+    res.status(200).json({
       status: true,
       data: data?.toObject()
     })
@@ -70,5 +71,41 @@ router.get('/specialities/:id', async (req: Request, res: Response) => {
       message: 'pas trouvé'
     })
   }
+})
+
+
+router.post('/naniens/like', async (req: Request, res: Response) => {
+  const email: string = req.body.email
+  const userEmail: string = req.body.userEmail
+  let status = false
+  let message = 'missing email'
+  if (email && userEmail){
+    const user = await Student.findOne({email: userEmail})
+    if (!user){
+      message = 'Student not found'
+    }
+    else if (user?.likers.includes(email)){
+      message = 'already voted'
+    }else{
+      const splitted = email.split('@')
+      const last = splitted[splitted.length - 1]
+      if (domains.includes(last)){
+        const likers = user?.toObject().likers
+        likers?.push(email)
+        console.log(likers)
+        await user?.updateOne({likers: likers})
+        await user?.save()
+        status = true
+        message = 'like success'
+      }else{
+        message = 'domaine d\'email non autorisé'
+      }
+    }
+  }
+  res.json({
+    status: status,
+    message: message
+  })
+
 })
 export default router
