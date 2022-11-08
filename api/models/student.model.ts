@@ -75,6 +75,11 @@ const studentShema = new Schema({
       type: Array,
       required: false,
     }
+  },
+  isValidate: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 }, {
   timestamps: true

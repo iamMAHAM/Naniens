@@ -1,19 +1,20 @@
 import { Request, Response, Router } from "express"
-import Student from "../models/student.model"
+import Students from "../models/student.model"
 import specialities from "../models/specialities.model"
 import { domains } from "../config/authorized"
+import newsletters from "../models/newsletter.model"
 const router = Router()
 
 router.post('/add', async (req: Request, res: Response) => {
   try {
     let body = req.body
-    const exists = await Student.findOne({
+    const exists = await Students.findOne({
       email: body.email
     })
     if (exists) {
       await exists.delete()
     }
-    const data = new Student(body)
+    const data = new Students(body)
     console.log('data', data)
     await data.save()
     res.status(200).json({
@@ -30,7 +31,7 @@ router.post('/add', async (req: Request, res: Response) => {
 
 router.get('/retrieve/:email', async (req: Request, res: Response)=>{
   const email = req.params.email
-  const retrieved = await Student.findOne({ email: email})
+  const retrieved = await Students.findOne({ email: email})
   res.status(200).json({
     message: retrieved?.toObject()
   })
@@ -38,13 +39,48 @@ router.get('/retrieve/:email', async (req: Request, res: Response)=>{
 
 
 router.get('/naniens', async (_: Request, res: Response) => {
-  const naniens = await Student.find()
+  const naniens = await Students.find({isValidate: true})
   res.json({
     status: true,
     data: [...naniens]
   })
 })
 
+router.get('/naniens/waiting', async (_: Request, res: Response) => {
+  const awaited = await Students.find({isValidate: false})
+  res.status(200).json({
+    status: true,
+    data: [...awaited]
+  })
+})
+
+router.post('/naniens/:type', async (req: Request, res: Response) => {
+  const user = await Students.findOne({_id: req.body.id})
+  const type = req.params.type
+  if (!type || !user){
+    res.status(400).json({
+      status: false,
+      message: 'Invalid request'
+    })
+    return
+  }
+  if (type === 'validate'){
+    await user.updateOne({isValidate: true})
+    await user.save()
+  } else if (type === 'deny') await user.delete()
+   else {
+    res.status(404).json({
+      status: false,
+      message: 'unknow route'
+    })
+    return
+  }
+  
+  res.status(200).json({
+    status: true,
+    message: 'Success'
+  })
+})
 
 router.get('/specialities', async (_: Request, res: Response) => {
   const specialies  = await specialities.find()
@@ -80,9 +116,9 @@ router.post('/naniens/like', async (req: Request, res: Response) => {
   let status = false
   let message = 'missing email'
   if (email && userEmail){
-    const user = await Student.findOne({email: userEmail})
+    const user = await Students.findOne({email: userEmail})
     if (!user){
-      message = 'Student not found'
+      message = 'Students not found'
     }
     else if (user?.likers.includes(email)){
       message = 'already voted'
@@ -107,5 +143,22 @@ router.post('/naniens/like', async (req: Request, res: Response) => {
     message: message
   })
 
+})
+
+router.post('/newsletter', async (req: Request, res: Response) => {
+  newsletters.create({email: req.body.email})
+  .then(doc => {
+    console.log(doc)
+    res.status(200).json({
+      status: true,
+      message: 'success'
+    })
+  })
+  .catch((e: Error) => {
+    res.status(501).json({
+      status: false,
+      message: e.message
+    })
+  })
 })
 export default router
